@@ -13,6 +13,7 @@ const Register = () => {
     // Check password matching
     if (data.password === data.password2) {
       const fullName = `${data.firstName} ${data.lastName}`;
+      console.log(fullName);
 
       // registerUser(fullName, data.email, data.password, history);
     } else if (data.password !== data.password2) {
