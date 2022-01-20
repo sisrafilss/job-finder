@@ -9,13 +9,15 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  //
-  const { signInWithGoogle } = useAuth();
+  // Import Authentication funtions
+  const { signInWithGoogle, loginWithEmailAndPassword } = useAuth();
 
+  // Handle Google Sign In
   const handleGoogleSignIn = () => {
     signInWithGoogle(navigate, location);
   };
 
+  // React Hook Form
   const {
     register,
     handleSubmit,
@@ -23,8 +25,9 @@ const Login = () => {
   } = useForm();
   const onSubmit = (data) => {
     console.log(data);
+
     // Login user using email and passworld
-    // loginUser(data.email, data.password, location, history);
+    loginWithEmailAndPassword(data.email, data.password, navigate, location);
   };
 
   return (

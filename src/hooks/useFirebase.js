@@ -4,6 +4,7 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   updateProfile,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import initializeAuthentication from "../Firebase/firebase.init";
 
@@ -50,6 +51,27 @@ const useFirebase = () => {
       });
   };
 
+  // Login with email and password
+  const loginWithEmailAndPassword = (email, password, navigate, location) => {
+    // dispatch(setLoading({ loading: true }));
+    signInWithEmailAndPassword(auth, email, password)
+      .then((result) => {
+        // Empty error for successfully login
+        // dispatch(setAuthError({ error: "" }));
+        // Redirect user to the page where they come from
+        const from = location.state?.from?.pathname || "/";
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        // Set error to the error
+        // dispatch(setAuthError({ error: error.message }));
+      })
+      .finally(() => {
+        // Update loading status
+        // dispatch(setLoading({ loading: false }));
+      });
+  };
+
   // Google sign in
   const signInWithGoogle = (navigate, location) => {
     const googleProvider = new GoogleAuthProvider();
@@ -91,6 +113,7 @@ const useFirebase = () => {
 
   return {
     registerUser,
+    loginWithEmailAndPassword,
     signInWithGoogle,
   };
 };
