@@ -5,19 +5,34 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
+import { useEffect } from "react";
+
 import initializeAuthentication from "../Firebase/firebase.init";
+import useLocalStorage from "./useLocalStorage";
 
 initializeAuthentication();
 
 const useFirebase = () => {
   const auth = getAuth();
+  // Get Local Storage funtionas from custom hooks
+  const { getUser, updateUser, clearUserData } = useLocalStorage();
+
+  // Get user data from Local Storage if exists
+  const user = JSON.parse(getUser());
 
   // Register new user
   const registerUser = (name, email, password, navigate, location) => {
     // dispatch(setLoading({ loading: true }));
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
+        const user = result.user;
+
+        // Save user data to local Storage
+        updateUser(user);
+
         // Empty error for successfully register
         // dispatch(setAuthError({ error: "" }));
 
@@ -56,6 +71,10 @@ const useFirebase = () => {
     // dispatch(setLoading({ loading: true }));
     signInWithEmailAndPassword(auth, email, password)
       .then((result) => {
+        const user = result.user;
+        // Save user data to local Storage
+        updateUser(user);
+
         // Empty error for successfully login
         // dispatch(setAuthError({ error: "" }));
         // Redirect user to the page where they come from
@@ -82,6 +101,9 @@ const useFirebase = () => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const user = result.user;
+
+        // Save user data to local Storage
+        updateUser(user);
 
         console.log(user);
 
@@ -111,10 +133,43 @@ const useFirebase = () => {
       });
   };
 
+  // Observing user state
+  useEffect(() => {
+    // dispatch(setLoading({ loading: true }));
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // dispatch(
+        //   setUser({
+        //     email: user.email,
+        //     displayName: user.displayName,
+        //     photoURL: user.photoURL,
+        //   })
+        // );
+        // dispatch(setLoading({ loading: false }));
+      } else {
+      }
+    });
+    return () => unsubscribe;
+  }, [auth]);
+
+  // Log Out
+  const logOut = () => {
+    signOut(auth)
+      .then(() => {
+        clearUserData();
+        // dispatch(setUser({}));
+      })
+      .catch(() => {
+        // An error happened.
+      });
+  };
+
   return {
+    user,
     registerUser,
     loginWithEmailAndPassword,
     signInWithGoogle,
+    logOut,
   };
 };
 
