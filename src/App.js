@@ -1,12 +1,15 @@
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import Home from "./Components/Home/Home";
+import PageNotFound from "./Components/PageNotFound/PageNotFound";
 
 function App() {
   return (
-    <div className="App">
-      <h1 className="text-center mt-5 display-1">
-        Welcome to Tech Job Finder
-      </h1>
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="*" element={<PageNotFound />} />
+    </Routes>
   );
 }
 
