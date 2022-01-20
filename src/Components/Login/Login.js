@@ -1,12 +1,19 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 import "./Login.css";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  //
+  const { signInWithGoogle } = useAuth();
+
   const handleGoogleSignIn = () => {
-    // signInWithGoogle(location, history);
+    signInWithGoogle(navigate, location);
   };
 
   const {
