@@ -4,4 +4,4 @@ const useAuth = () => {
   return useFirebase();
 };
 
-export default useAuth;
+export default useAuth; 
